@@ -7,7 +7,7 @@ import org.executable.annotations.SafeUsage;
 @SuppressWarnings("unused")
 
 @SafeUsage(
-        "Does not throw any errors by default."
+        "Does not throw any errors by default. Be weary when using."
 )
 public class BlankNode implements TaskNode {
     @Override
