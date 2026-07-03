@@ -261,8 +261,9 @@ public record Executor<T>(TaskQueue queue) {
         return new Executor<>(queue);
     }
 
-    public <R> Executor<T> parallel() {
-
+    public <R> Executor<R> parallel(Executor<?>... executors) {
+        queue.addTask(new ParallelNode(executors));
+        return new Executor<>(queue);
     }
 
     public <R> Executor<R> addNode(TaskNode node) {
