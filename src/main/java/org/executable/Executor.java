@@ -241,6 +241,11 @@ public record Executor<T>(TaskQueue queue) {
         return this;
     }
 
+    public Executor<T> delayIf(long ms, Predicate<T> predicate) {
+        queue.addTask(new DelayNode((Predicate<Object>)  predicate,ms));
+        return this;
+    }
+
     public Executor<T> onCancel(Runnable runnable) {
         queue.setCancelEvent(runnable);
         return this;
