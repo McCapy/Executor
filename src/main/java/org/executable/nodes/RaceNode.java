@@ -12,7 +12,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 
 
-public class RaceNode implements TaskNode {
+public class                                                      RaceNode implements TaskNode {
     final Executor<?>[] executors;
     final long delay;
     public RaceNode(Executor<?>... executors) {

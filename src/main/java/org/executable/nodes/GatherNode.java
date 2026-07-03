@@ -69,7 +69,7 @@ public class GatherNode implements TaskNode {
             return current;
         }
 
-        if (function != null) {
+        else if (function != null) {
             try {
                 return function.apply(gathered);
             } catch (RuntimeException e) {
