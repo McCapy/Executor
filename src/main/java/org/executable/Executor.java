@@ -260,10 +260,16 @@ public record Executor<T>(TaskQueue queue) {
         queue.addTask(new RaceNode(delay, executors));
         return new Executor<>(queue);
     }
+
+    public <R> Executor<T> parallel() {
+
+    }
+
     public <R> Executor<R> addNode(TaskNode node) {
         queue.addTask(node);
         return new Executor<>(queue);
     }
+
     public <R> Executor<T> addSideNode(ForkNode<R> node) {
         queue.addSideTask(node);
         return this;
