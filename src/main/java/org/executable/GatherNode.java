@@ -1,8 +1,5 @@
-package org.executable.nodes;
+package org.executable;
 
-import org.executable.Executor;
-import org.executable.TaskNode;
-import org.executable.TaskQueue;
 import org.executable.annotations.SafeUsage;
 import org.executable.annotations.ValueTask;
 

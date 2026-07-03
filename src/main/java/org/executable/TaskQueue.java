@@ -1,7 +1,5 @@
 package org.executable;
 
-import org.executable.nodes.ForkNode;
-
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -145,9 +143,11 @@ public final class TaskQueue {
         tasks.clear();
         sideTasks.clear();
     }
-
+    void setCurrent(Object current) {
+        this.current = current;
+    }
+    Object current = null;
     void run() {
-        Object current = null;
         for (TaskNode node : tasks) {
             if (cancelled) {
                 if (cancelEvent != null) cancelEvent.run();

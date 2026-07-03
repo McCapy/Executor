@@ -1,8 +1,4 @@
-package org.executable.nodes;
-
-import org.executable.Executor;
-import org.executable.TaskNode;
-import org.executable.TaskQueue;
+package org.executable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +11,6 @@ public class MergeNode implements TaskNode {
     final Executor<?>[] executors;
     public MergeNode(Executor<?>... executors) {
         this.executors = executors;
-
     }
     @Override
     public Object execute(Object current, TaskQueue queue) {

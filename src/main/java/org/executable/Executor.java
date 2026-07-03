@@ -3,7 +3,6 @@ package org.executable;
 import org.executable.annotations.SafeUsage;
 import org.executable.annotations.ValueTask;
 import org.executable.annotations.VolatileUsage;
-import org.executable.nodes.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -255,6 +254,14 @@ public record Executor<T>(TaskQueue queue) {
     public Executor<?> race(long delay, Executor<?>... executors) {
         queue.addTask(new RaceNode(delay, executors));
         return new Executor<>(queue);
+    }
+    public <R> Executor<R> addNode(TaskNode node) {
+        queue.addTask(node);
+        return new Executor<>(queue);
+    }
+    public <R> Executor<T> addSideNode(ForkNode<R> node) {
+        queue.addSideTask(node);
+        return this;
     }
 
     <X> X cast(X obj) {

@@ -1,7 +1,5 @@
-package org.executable.nodes;
+package org.executable;
 
-import org.executable.TaskNode;
-import org.executable.TaskQueue;
 import org.executable.annotations.SafeUsage;
 
 @SuppressWarnings("unused")

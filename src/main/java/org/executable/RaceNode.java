@@ -1,8 +1,4 @@
-package org.executable.nodes;
-
-import org.executable.Executor;
-import org.executable.TaskNode;
-import org.executable.TaskQueue;
+package org.executable;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;

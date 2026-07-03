@@ -1,7 +1,4 @@
-package org.executable.nodes;
-
-import org.executable.TaskNode;
-import org.executable.TaskQueue;
+package org.executable;
 
 import java.util.function.Function;
 
