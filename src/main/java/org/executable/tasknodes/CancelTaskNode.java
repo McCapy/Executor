@@ -1,7 +1,11 @@
-package org.executable;
+package org.executable.tasknodes;
+
+import org.executable.TaskNode;
+import org.executable.TaskQueue;
 
 import java.util.function.Predicate;
 
+@SuppressWarnings("ClassCanBeRecord")
 public class CancelTaskNode implements TaskNode {
     final Predicate<Object> predicate;
     public CancelTaskNode(Predicate<Object> predicate) {

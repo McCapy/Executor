@@ -1,21 +1,21 @@
-package org.executable;
+package org.executable.tasknodes;
 
+import org.executable.TaskNode;
+import org.executable.TaskQueue;
 import org.executable.annotations.SafeUsage;
-
-import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 
 @SafeUsage("Does not throw any errors by default.")
-public class PeekNode implements TaskNode {
-    final Consumer<Object> consumer;
-    public PeekNode(Consumer<Object> consumer) {
-        this.consumer = consumer;
+public class ExecuteNode implements TaskNode {
+    final Runnable runnable;
+    public ExecuteNode(Runnable runnable) {
+        this.runnable = runnable;
     }
     @Override
     public Object execute(Object current, TaskQueue queue) {
         try {
-            consumer.accept(current);
+            runnable.run();
         }
         catch (RuntimeException throwable) {
             queue.setError(throwable);
@@ -23,8 +23,9 @@ public class PeekNode implements TaskNode {
         }
         return current;
     }
+
     @Override
-    public Class<PeekNode> identity() {
-        return PeekNode.class;
+    public Class<ExecuteNode> identity() {
+        return ExecuteNode.class;
     }
 }

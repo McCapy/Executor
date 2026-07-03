@@ -1,5 +1,8 @@
-package org.executable;
+package org.executable.tasknodes;
 
+import org.executable.Executor;
+import org.executable.TaskNode;
+import org.executable.TaskQueue;
 import org.executable.annotations.ValueTask;
 import org.executable.annotations.VolatileUsage;
 
@@ -33,7 +36,7 @@ public class ParallelNode implements TaskNode {
                 .map((item) -> {
                     Object[] results = new Object[executors.length];
                     for (Executor<?> executor : executors) {
-                        executor.queue().setCurrent(item);
+                        executor.queue().tasks.set(0,new InitialNode(item));
                         executor.start();
                     }
                     for (int i = 0, executorsLength = executors.length; i < executorsLength; i++) {

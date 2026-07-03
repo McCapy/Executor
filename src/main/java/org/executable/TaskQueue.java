@@ -1,5 +1,7 @@
 package org.executable;
 
+import org.executable.tasknodes.ForkNode;
+
 import java.util.*;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -11,8 +13,8 @@ public final class TaskQueue {
     volatile RuntimeException error = null;
     volatile boolean cancelled = false;
     volatile Runnable cancelEvent;
-    final ArrayList<TaskNode> tasks = new ArrayList<>(2);
-    final ArrayList<ForkNode> sideTasks = new ArrayList<>(2);
+    public final ArrayList<TaskNode> tasks = new ArrayList<>(2);
+    public final ArrayList<ForkNode> sideTasks = new ArrayList<>(2);
 
     final CountDownLatch started = new CountDownLatch(1);
     final CountDownLatch completed = new CountDownLatch(1);

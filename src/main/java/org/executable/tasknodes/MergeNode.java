@@ -1,4 +1,8 @@
-package org.executable;
+package org.executable.tasknodes;
+
+import org.executable.Executor;
+import org.executable.TaskNode;
+import org.executable.TaskQueue;
 
 import java.util.ArrayList;
 import java.util.List;

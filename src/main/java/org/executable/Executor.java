@@ -3,6 +3,7 @@ package org.executable;
 import org.executable.annotations.SafeUsage;
 import org.executable.annotations.ValueTask;
 import org.executable.annotations.VolatileUsage;
+import org.executable.tasknodes.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -222,12 +223,12 @@ public record Executor<T>(TaskQueue queue) {
     }
 
     public <R> Executor<T> independentFork(Function<T, Executor<R>> executorFunction) {
-        queue.addTask(new ForkIndependent((Function<Object, ? extends Executor<?>>) executorFunction));
+        queue.addTask(new ForkIndependentNode((Function<Object, ? extends Executor<?>>) executorFunction));
         return this;
     }
 
     public <R> Executor<T> independentFork(Executor<R> executor) {
-        queue.addTask(new ForkIndependent(executor));
+        queue.addTask(new ForkIndependentNode(executor));
         return this;
     }
 

@@ -1,16 +1,20 @@
-package org.executable;
+package org.executable.tasknodes;
+
+import org.executable.Executor;
+import org.executable.TaskNode;
+import org.executable.TaskQueue;
 
 import java.util.function.Function;
 
 @SuppressWarnings("unused")
-public class ForkIndependent implements TaskNode {
+public class ForkIndependentNode implements TaskNode {
     final Function<Object, ? extends Executor<?>> function;
 
-    public ForkIndependent(Executor<?> executor) {
+    public ForkIndependentNode(Executor<?> executor) {
         this.function = (item) -> executor;
     }
 
-    public ForkIndependent(Function<Object, ? extends Executor<?>> function) {
+    public ForkIndependentNode(Function<Object, ? extends Executor<?>> function) {
         this.function = function;
     }
 
@@ -26,7 +30,7 @@ public class ForkIndependent implements TaskNode {
     }
 
     @Override
-    public Class<ForkIndependent> identity() {
-        return ForkIndependent.class;
+    public Class<ForkIndependentNode> identity() {
+        return ForkIndependentNode.class;
     }
 }
