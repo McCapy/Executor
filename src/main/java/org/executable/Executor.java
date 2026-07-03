@@ -79,10 +79,6 @@ public record Executor<T>(TaskQueue queue) {
         queue.cancel();
     }
 
-    public T result() {
-        return queue.getResult();
-    }
-
     public <R> Executor<R> loop(long iterations, Function<T, R> function) {
         queue.addTask(new LoopNode((Function<Object, Object>) function, iterations));
         return new Executor<>(queue);
@@ -259,11 +255,6 @@ public record Executor<T>(TaskQueue queue) {
 
     public Executor<?> race(long delay, Executor<?>... executors) {
         queue.addTask(new RaceNode(delay, executors));
-        return new Executor<>(queue);
-    }
-
-    public <R> Executor<R> parallel(Executor<?>... executors) {
-        queue.addTask(new ParallelNode(executors));
         return new Executor<>(queue);
     }
 

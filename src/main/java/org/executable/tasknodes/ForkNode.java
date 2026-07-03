@@ -13,7 +13,7 @@ import java.util.function.Function;
 @ValueTask("It depends")
 @VolatileUsage("It depends")
 @SafeUsage("It depends")
-public class ForkNode<R> implements TaskNode {
+public final class ForkNode<R> implements TaskNode {
 
     final Function<Object, Executor<?>> function;
     Executor<R> executor;
