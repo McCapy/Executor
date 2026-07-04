@@ -1,8 +1,5 @@
 package org.executable;
 
-import org.executable.annotations.SafeUsage;
-import org.executable.annotations.ValueTask;
-import org.executable.annotations.VolatileUsage;
 import org.executable.tasknodes.*;
 
 import java.util.function.Consumer;
@@ -11,28 +8,7 @@ import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @SuppressWarnings({"unchecked", "unused"})
-@SafeUsage(
-        "Does not throw any errors " +
-                "which have the potential " +
-                "to harm the main thread."
-)
-@VolatileUsage(
-        "While the executor class doesn't throw errors " +
-                "that affect the main/parent thread by default, " +
-                "there can be things that affect the tasks of the " +
-                "Executor and both child/parent executors."
-)
-@ValueTask(
-        "The end goal of an executor is to create " +
-                "a value or to create multiple values via " +
-                "parallelization. It can also be used for " +
-                "stopping calls such as IO tasks or for " +
-                "other forms of stopping calls like http " +
-                "requests or network calls. Using the " +
-                "existence of .fork() to get a value and " +
-                "return its result in a non-stopping manner " +
-                "is how it is so versatile and efficient."
-)
+
 public record Executor<T>(TaskQueue queue) {
 
     public Executor() {
@@ -153,8 +129,8 @@ public record Executor<T>(TaskQueue queue) {
         return this;
     }
 
-    public Executor<Void> empty(Consumer<Object> consumer) {
-        queue.addTask(new EmptyNode(consumer));
+    public Executor<Void> empty(Consumer<T> consumer) {
+        queue.addTask(new EmptyNode((Consumer<Object>) consumer));
         return new Executor<>(queue);
     }
 

@@ -2,11 +2,9 @@ package org.executable.tasknodes;
 
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
 
 @SuppressWarnings("unused")
 
-@SafeUsage("Does not throw any errors by default.")
 public class ExecuteNode implements TaskNode {
     final Runnable runnable;
     public ExecuteNode(Runnable runnable) {

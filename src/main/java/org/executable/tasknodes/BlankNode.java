@@ -2,13 +2,9 @@ package org.executable.tasknodes;
 
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
 
 @SuppressWarnings("unused")
 
-@SafeUsage(
-        "Does not throw any errors by default. Be weary when using."
-)
 public class BlankNode implements TaskNode {
     @Override
     public Object execute(Object current, TaskQueue queue) {

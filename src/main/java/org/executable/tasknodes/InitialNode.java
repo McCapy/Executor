@@ -2,19 +2,11 @@ package org.executable.tasknodes;
 
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
-import org.executable.annotations.ValueTask;
 
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 
-@ValueTask(
-        "Acts as the initializer for the cache, " +
-        "can also be null. It can also be used " +
-        "to offer to, or set, the result"
-)
-@SafeUsage("Does not throw any errors by default.")
 public class InitialNode implements TaskNode {
     final Supplier<?> item;
     public InitialNode(Object item) {

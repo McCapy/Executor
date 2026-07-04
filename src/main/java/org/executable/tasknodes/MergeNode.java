@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"unused", "rawtypes", "BooleanMethodIsAlwaysInverted"})
-
-
 public class MergeNode implements TaskNode {
 
     final Executor<?>[] executors;

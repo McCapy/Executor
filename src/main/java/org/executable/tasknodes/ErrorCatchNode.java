@@ -2,21 +2,10 @@ package org.executable.tasknodes;
 
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
-import org.executable.annotations.ValueTask;
 
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-@ValueTask(
-        "Empties the cache of the Executor, " +
-        "which removes its value and executes " +
-        "task. This task can take in a value, " +
-        "or it can just execute a runnable."
-)
-@SafeUsage(
-        "Does not throw any errors by default."
-)
 public class ErrorCatchNode implements TaskNode {
     final Consumer<Throwable> consumer;
     public ErrorCatchNode() {

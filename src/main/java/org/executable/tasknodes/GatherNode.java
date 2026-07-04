@@ -3,8 +3,6 @@ package org.executable.tasknodes;
 import org.executable.Executor;
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
-import org.executable.annotations.ValueTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,24 +10,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "rawtypes", "BooleanMethodIsAlwaysInverted"})
-@ValueTask(
-        "It has the potential of returning a value, " +
-        "or it can also return the current value of " +
-        "the executor. A blank gather node will result " +
-        "in returning the current value, while composing " +
-        "using a function will return a new result, consumer " +
-        "will also return current but still execute a task " +
-        "with all the values inputted into it. Where the " +
-        "first element of the array is the current value, " +
-        "and the following values in the array are the " +
-        "collected values from the fork joined tasks."
-)
-@SafeUsage(
-        "It depends on the forked tasks, " +
-        "the main tasks, and such. " +
-        "Although typically there will " +
-        "be no error thrown by default."
-)
+
 public class GatherNode implements TaskNode {
 
     final Function<Object[], Object> function;

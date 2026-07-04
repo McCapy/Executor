@@ -9,10 +9,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @SuppressWarnings("unused")
-
-
-
-public class                                                      RaceNode implements TaskNode {
+public class RaceNode implements TaskNode {
     final Executor<?>[] executors;
     final long delay;
     public RaceNode(Executor<?>... executors) {

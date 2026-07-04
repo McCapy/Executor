@@ -3,17 +3,12 @@ package org.executable.tasknodes;
 import org.executable.Executor;
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
-import org.executable.annotations.ValueTask;
-import org.executable.annotations.VolatileUsage;
 
 import java.util.function.Function;
 
 @SuppressWarnings({"unused", "unchecked", "rawtypes"})
-@ValueTask("It depends")
-@VolatileUsage("It depends")
-@SafeUsage("It depends")
-public final class ForkNode<R> implements TaskNode {
+
+public class ForkNode<R> implements TaskNode {
 
     final Function<Object, Executor<?>> function;
     Executor<R> executor;

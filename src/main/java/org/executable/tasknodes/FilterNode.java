@@ -2,20 +2,12 @@ package org.executable.tasknodes;
 
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
-import org.executable.annotations.ValueTask;
 
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 @SuppressWarnings("unused")
 
-@SafeUsage("This node does not throw any errors by default.")
-@ValueTask(
-        "Has the potential of changing the cache, " +
-        "although it can also preserve the caches value. " +
-        "This entirely depends on the Predicate"
-)
 public class FilterNode implements TaskNode {
     final Supplier<Object> def;
     final Predicate<Object> predicate;

@@ -2,14 +2,16 @@ package org.executable.tasknodes;
 
 import org.executable.TaskNode;
 import org.executable.TaskQueue;
-import org.executable.annotations.SafeUsage;
 
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 
-@SafeUsage("Does not throw any errors by default.")
-public record PeekNode(Consumer<Object> consumer) implements TaskNode {
+public class PeekNode implements TaskNode {
+    Consumer<Object> consumer;
+    public PeekNode(Consumer<Object> objectConsumer) {
+        this.consumer = objectConsumer;
+    }
     @Override
     public Object execute(Object current, TaskQueue queue) {
         try {
