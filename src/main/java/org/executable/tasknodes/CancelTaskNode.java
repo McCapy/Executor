@@ -15,7 +15,7 @@ public class CancelTaskNode implements TaskNode {
     public Object execute(Object current, TaskQueue queue) {
         try {
             if (predicate.test(current)) queue.cancel();
-            return null;
+            return current;
         }
         catch (RuntimeException e) {
             queue.setError(e);

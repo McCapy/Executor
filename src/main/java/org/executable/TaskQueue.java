@@ -142,8 +142,6 @@ public final class TaskQueue {
             completed.countDown();
         }
         result = null;
-        tasks.clear();
-        sideTasks.clear();
     }
     void setCurrent(Object current) {
         this.current = current;
