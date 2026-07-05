@@ -13,6 +13,7 @@ public final class TaskQueue {
     volatile RuntimeException error = null;
     volatile boolean cancelled = false;
     volatile Runnable cancelEvent;
+    public int retryCount = 0;
 
     public final ArrayList<TaskNode> tasks = new ArrayList<>(2);
     public final ArrayList<ForkNode> sideTasks = new ArrayList<>(2);
@@ -54,9 +55,11 @@ public final class TaskQueue {
         return cast(result);
     }
 
+    public Object errorItem;
     public void setError(RuntimeException error) {
         if (this.error == null) {
             this.error = error;
+            this.errorItem = result;
         }
     }
 

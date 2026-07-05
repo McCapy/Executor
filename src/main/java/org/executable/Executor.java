@@ -280,6 +280,21 @@ public record Executor<T>(TaskQueue queue) {
         return new Executor<>(queue);
     }
 
+    public Executor<T> catchRetry(int max) {
+        queue.addTask(new RetryNode(max));
+        return this;
+    }
+
+    public Executor<T> catchRetry(Consumer<RuntimeException> consumer,int max) {
+        queue.addTask(new RetryNode(consumer,max));
+        return this;
+    }
+
+    public Executor<T> catchRetry(Consumer<RuntimeException> consumer, int max, T def) {
+        queue.addTask(new RetryNode(consumer,max,def));
+        return this;
+    }
+
     <X> X cast(X obj) {
         return obj;
     }
