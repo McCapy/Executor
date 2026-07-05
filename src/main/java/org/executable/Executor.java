@@ -260,6 +260,26 @@ public record Executor<T>(TaskQueue queue) {
         return this;
     }
 
+    public Executor<T> skipIf(Predicate<T> predicate, int skips) {
+        queue.addTask(new SkipNode((Predicate<Object>) predicate,skips));
+        return this;
+    }
+
+    public Executor<T> skip(int skips) {
+        queue.addTask(new SkipNode(skips));
+        return this;
+    }
+
+    public Executor<T> doWhile(Predicate<T> predicate, int tasksAhead) {
+        queue.addTask(new WhileNode((Predicate<Object>) predicate,tasksAhead));
+        return new Executor<>(queue);
+    }
+
+    public <R> Executor<R> doWhile(Predicate<T> predicate) {
+        queue.addTask(new WhileNode((Predicate<Object>) predicate,1));
+        return new Executor<>(queue);
+    }
+
     <X> X cast(X obj) {
         return obj;
     }

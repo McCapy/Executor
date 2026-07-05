@@ -13,15 +13,14 @@ public final class TaskQueue {
     volatile RuntimeException error = null;
     volatile boolean cancelled = false;
     volatile Runnable cancelEvent;
+
     public final ArrayList<TaskNode> tasks = new ArrayList<>(2);
     public final ArrayList<ForkNode> sideTasks = new ArrayList<>(2);
 
     final CountDownLatch started = new CountDownLatch(1);
     final CountDownLatch completed = new CountDownLatch(1);
 
-    volatile Thread worker;
-
-
+    public volatile Thread worker;
 
     public void resetError() {
         this.error = null;
@@ -63,16 +62,6 @@ public final class TaskQueue {
 
     public void setCancelEvent(Runnable runnable) {
         this.cancelEvent = runnable;
-    }
-
-    public void addTask(TaskNode... nodes) {
-        tasks.addAll(List.of(nodes));
-    }
-
-    public void addTask(long amt, TaskNode node) {
-        for (long i = 0; i < amt; i++) {
-            tasks.add(node);
-        }
     }
 
     public void addTask(TaskNode node) {
@@ -143,17 +132,16 @@ public final class TaskQueue {
         }
         result = null;
     }
-    void setCurrent(Object current) {
-        this.current = current;
-    }
     Object current = null;
+    public int currentTask = 0;
     void run() {
-        for (TaskNode node : tasks) {
+        while (currentTask < tasks.size()) {
             if (cancelled) {
                 if (cancelEvent != null) cancelEvent.run();
                 break;
             }
-            result = current = node.execute(current, this);
+            result = current = tasks.get(currentTask).execute(current,this);
+            currentTask++;
         }
         if (completed.getCount() > 0) {
             completed.countDown();
