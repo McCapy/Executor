@@ -35,6 +35,7 @@ public class RetryNode implements TaskNode {
         if (queue.getError() != null) {
             queue.retryCount++;
             if (queue.retryCount >= retryCount) {
+                queue.resetError();
                 return def;
             }
             if (consumer != null) consumer.accept(queue.getError());

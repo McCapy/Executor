@@ -135,9 +135,9 @@ public final class TaskQueue {
         }
         result = null;
     }
-    Object current = null;
     public int currentTask = 0;
     void run() {
+        Object current = null;
         while (currentTask < tasks.size()) {
             if (cancelled) {
                 if (cancelEvent != null) cancelEvent.run();
