@@ -119,8 +119,8 @@ public record Executor<T>(TaskQueue queue) {
         return new Executor<>(queue);
     }
 
-    public <R> Executor<R> filter(Predicate<T> predicate, Supplier<R> supplier) {
-        queue.addTask(new FilterNode((Predicate<Object>) predicate, supplier));
+    public <R> Executor<R> filter(Predicate<T> predicate, Supplier<R> def) {
+        queue.addTask(new FilterNode((Predicate<Object>) predicate, def));
         return new Executor<>(queue);
     }
 
@@ -192,6 +192,22 @@ public record Executor<T>(TaskQueue queue) {
     public Executor<T> executeIf(Predicate<T> predicate, Runnable runnable) {
         queue.addTask(new ExecuteIfNode((Predicate<Object>) predicate, runnable));
         return this;
+    }
+
+    public <R> Executor<R> emptyIf(Predicate<T> predicate, Consumer<T> consumer) {
+        queue.addTask(new EmptyIfNode((Predicate<Object>) predicate, (Consumer<Object>) consumer));
+        return new Executor<>(queue);
+    }
+
+    public <R> Executor<R> emptyIf(Predicate<T> predicate, Runnable runnable) {
+        queue.addTask(new EmptyIfNode((Predicate<Object>) predicate,runnable));
+        return new Executor<>(queue);
+
+    }
+
+    public <R> Executor<R> emptyIf(Predicate<T> predicate) {
+        queue.addTask(new EmptyIfNode((Predicate<Object>) predicate));
+        return new Executor<>(queue);
     }
 
     public <R> Executor<T> independentFork(Function<T, Executor<R>> executorFunction) {
