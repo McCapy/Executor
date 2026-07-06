@@ -94,7 +94,7 @@ These are the things that directly morph results and act as debugging or general
   > void main() {
   >   Executor<Void> executor =
   >     new Executor(5)
-  >       .map(item -> null)
+  >       .map(item -> null);
   > }
   > ```
 - `Executor#execute(Runnable runnable)`
