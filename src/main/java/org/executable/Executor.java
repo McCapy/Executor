@@ -55,13 +55,18 @@ public record Executor<T>(TaskQueue queue) {
         queue.cancel();
     }
 
-    public <R> Executor<R> loop(long iterations, Function<T, R> function) {
+    public <R> Executor<R> loop(int iterations, Function<T, R> function) {
         queue.addTask(new LoopNode((Function<Object, Object>) function, iterations));
         return new Executor<>(queue);
     }
 
-    public <R> Executor<R> loop(Function<T, R> function, long iterations) {
+    public <R> Executor<R> loop(Function<T, R> function, int iterations) {
         queue.addTask(new LoopNode((Function<Object, Object>) function, iterations));
+        return new Executor<>(queue);
+    }
+
+    public Executor<T> loop(int loops, int tasksAhead) {
+        queue.addTask(new LoopNode(loops,tasksAhead));
         return new Executor<>(queue);
     }
 

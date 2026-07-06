@@ -46,6 +46,8 @@ public class RetryNode implements TaskNode {
             return item;
         }
         queue.retryCount = 0;
+        queue.errorItem = null;
+        queue.resetError();
         return current;
     }
 
