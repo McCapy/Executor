@@ -102,10 +102,12 @@ public final class TaskQueue {
         }
         try {
             if (!completed.await(timeoutMs, TimeUnit.MILLISECONDS)) {
+                this.cancel();
                 return null;
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+            this.cancel();
             return null;
         }
         return cancelled ? null : cast(result);

@@ -2,6 +2,8 @@ package org.executable;
 
 import org.executable.tasknodes.*;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -127,11 +129,6 @@ public record Executor<T>(TaskQueue queue) {
     public <R> Executor<R> filter(Predicate<T> predicate, Supplier<R> def) {
         queue.addTask(new FilterNode((Predicate<Object>) predicate, def));
         return new Executor<>(queue);
-    }
-
-    public Executor<T> filter(Predicate<T> predicate) {
-        queue.addTask(new FilterNode((Predicate<Object>) predicate));
-        return this;
     }
 
     public Executor<Void> empty(Consumer<T> consumer) {
@@ -270,20 +267,24 @@ public record Executor<T>(TaskQueue queue) {
         return this;
     }
 
-    public Executor<T> onCancel(Runnable runnable) {
-        queue.setCancelEvent(runnable);
+    public Executor<T> onCancel(Runnable runnabl) {
+        queue.setCancelEvent(runnabl);
         return this;
     }
 
-    public Executor<?> race(Executor<?>... executors) {
-        queue.addTask(new RaceNode(executors));
-        return new Executor<>(queue);
-    }
+    //public Executor<?> race(Executor<?>... executors) {
+    //    List<Executor<?>> executorList = Arrays.asList(executors);
+    //    executorList.addFirst(this);
+    //    queue.addTask(new RaceNode(executorList.toArray(Executor<?>[]::new)));
+    //    return new Executor<>(queue);
+    //}
 
-    public Executor<?> race(long delay, Executor<?>... executors) {
-        queue.addTask(new RaceNode(delay, executors));
-        return new Executor<>(queue);
-    }
+    //public Executor<?> race(long delay, Executor<?>... executors) {
+    //    List<Executor<?>> executorList = Arrays.asList(executors);
+    //    executorList.addFirst(this);
+    //    queue.addTask(new RaceNode(delay,executorList.toArray(Executor<?>[]::new)));
+    //    return new Executor<>(queue);
+    //}
 
     public <R> Executor<R> addNode(TaskNode node) {
         queue.addTask(node);
