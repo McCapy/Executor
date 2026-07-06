@@ -154,7 +154,7 @@ public record Executor<T>(TaskQueue queue) {
         return this;
     }
 
-    public Executor<T> catchError(Consumer<Throwable> consumer) {
+    public Executor<T> catchError(Consumer<RuntimeException> consumer) {
         queue.addTask(new ErrorCatchNode(consumer));
         return this;
     }
@@ -167,6 +167,36 @@ public record Executor<T>(TaskQueue queue) {
     public Executor<T> catchError() {
         queue.addTask(new ErrorCatchNode());
         return this;
+    }
+
+    public <R> Executor<R> catchError(Consumer<RuntimeException> consumer, R def) {
+        queue.addTask(new ErrorCatchNode(consumer,def));
+        return new Executor<>(queue);
+    }
+
+    public <R> Executor<R> catchError(Runnable runnable, R def) {
+        queue.addTask(new ErrorCatchNode(runnable,def));
+        return new Executor<>(queue);
+    }
+
+    public <R> Executor<R> catchError(R def) {
+        queue.addTask(new ErrorCatchNode(() -> {}, def));
+        return new Executor<>(queue);
+    }
+
+    public <R> Executor<R> catchError(Supplier<R> def) {
+        queue.addTask(new ErrorCatchNode(() -> {}, def));
+        return new Executor<>(queue);
+    }
+
+    public <R> Executor<R> catchError(Consumer<RuntimeException> consumer, Supplier<R> def) {
+        queue.addTask(new ErrorCatchNode(consumer,def));
+        return new Executor<>(queue);
+    }
+
+    public <R> Executor<R> catchError(Runnable runnable, Supplier<R> def) {
+        queue.addTask(new ErrorCatchNode(runnable,def));
+        return new Executor<>(queue);
     }
 
     public Executor<T> throwing(RuntimeException exception) {
@@ -280,14 +310,14 @@ public record Executor<T>(TaskQueue queue) {
         return new Executor<>(queue);
     }
 
-    public <R> Executor<R> doWhile(Predicate<T> predicate) {
-        queue.addTask(new WhileNode((Predicate<Object>) predicate,1));
-        return new Executor<>(queue);
-    }
-
     public Executor<T> catchRetry(int max) {
         queue.addTask(new RetryNode(max));
         return this;
+    }
+
+    public <R> Executor<R> catchRetry(int max, R def) {
+        queue.addTask(new RetryNode((item) -> {},max,def));
+        return new Executor<>(queue);
     }
 
     public Executor<T> catchRetry(Consumer<RuntimeException> consumer,int max) {
@@ -295,9 +325,9 @@ public record Executor<T>(TaskQueue queue) {
         return this;
     }
 
-    public Executor<T> catchRetry(Consumer<RuntimeException> consumer, int max, T def) {
+    public <R> Executor<R> catchRetry(Consumer<RuntimeException> consumer, int max, R def) {
         queue.addTask(new RetryNode(consumer,max,def));
-        return this;
+        return new Executor<>(queue);
     }
 
     <X> X cast(X obj) {
