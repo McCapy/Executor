@@ -52,3 +52,17 @@ The ones that i explain should be enough for your needs alone though. Just keep 
   > Whenever an error is caught, the consumer will consume the error. Note this does have a variant with either a Supplier or an Object which can be passed in for   the value returned whenever an error is caught to replace the null value.
 - `Executor#catchError(Supplier<T> def)`
   > Replaces the null value from the error with the result of this supplier, can also be replaced with a `T def` instead.
+
+Now, we're doing task retrying. This set of methods does not have variants with Supplier<R>, nor Runnable's, although they will be added eventually.
+
+- `Executor#catchRetry(int max)`
+  > This defines how many times a task can be retried before it fails, and returns null.
+- `Executor#catchRetry(int max, R def)`
+  > This defines how many times a task can be retried, when the task fails it will return `def` instead of null.
+- `Executor#catchRetry(Consumer<RuntimeException> consumer, int max)`
+  > This consumes the error (if any) and retries it `max` times.
+- `Executor#catchRetry(Consumer<RuntimeException> consumer, int max, R def)`
+  > This consumes the error, runs `max` times, after exceding `max` it will return `def` instead of null.
+
+Now we've finally completed error handling, we can now move on to the actual operations of an Executor.
+*wip*
