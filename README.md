@@ -4,7 +4,7 @@
 ## Understanding
 To begin we must understand what the language inside the API means, we will go over EVERY method in the ExecutorAPI and the TaskNodeAPI respectively. Some methods will be considered `volatile` or `valuetasks` this mainly applies to TaskNodes which is where this language is most common, although to users that are NOT using the TaskNodeAPI this will just be simplified to "does this return something new?" and "does this throw an error that MUST be caught?"
 
-Although there are some exceptions to this, some methods can be marked volatile (ie their use is unstable and **CAN** throw errors, if you happen to do something in a TaskNode that has the potential to throw an error, that automatically makes it a `volatile` task, meaning you should implicitly either, retry the task 
+Although there are some exceptions to this, some methods can be marked volatile (ie their use is unstable and **CAN** throw errors, if you happen to do something in a TaskNode that has the potential to throw an error, that automatically makes it a `volatile` task, meaning you should implicitly either, retry the task
 (explained later) **OR** do an errorCatch() and add a default value or just outright cancel the task IF there is an error (explained later as well)
 
 Now for the actual documentation. We will start with the ExecutorAPI and move onto the TaskNodeAPI and its internals afterwards as it's quite hard to understand without the existence of the other TaskNodes and what they do to avoid pointless creation of a tasknode.
@@ -25,10 +25,19 @@ And that is all for initializations. Now we will move on to the status of an Exe
 - `Executor#isCompleted()` Checks if the executor has completed all tasks. This does not include forked tasks (unless gathered).
 - `Executor#isCancelled()` Checks if the executor has been cancelled.
 
+- `Executor#onCancel(Runnable runnable)`
+  > Executes the given runnable if the Executor cancels.
+
 We will also cover how to transform these status's.
 
 - `Executor#cancel()` **VOLATILE**
   > Cancels the executor. this halts the worker, as well as stops execution entirely. Any results which attempt to take from the cancelled executor will return       `null`
+- `Executor#start()`
+  > This starts executing the Executor task, it will start at the first node and work its way to the end. It returns the instance of the Executor
+- `Executor#join()`
+  > This joins the result of the Executor into the parent thread, gathering the result. Keep in mind this is stopping, so only call this whenever you're certain     you NEED the result at that exact moment.
+- `Executor#join(long ms)`
+  > Returns null if the task was cancelled, same for the last one, and after `ms` milliseconds have elapsed, it will return null and the task will automatically     cancel itself. Although if the task is completed in the given timespan, it will return the result of the task.
 
 And that is all for status's. Now we will move on to operations. This is where we get the ability to change data, and execute tasks.
 
@@ -65,4 +74,50 @@ Now, we're doing task retrying. This set of methods does not have variants with 
   > This consumes the error, runs `max` times, after exceding `max` it will return `def` instead of null.
 
 Now we've finally completed error handling, we can now move on to the actual operations of an Executor.
-*wip*
+These are the things that directly morph results and act as debugging or general purpose operations.
+
+- `Executor#map(Function<T,R> function)`
+  > This takes in the previous result from the previous task, and returns a new value from the function.
+- `Executor#offer(Supplier<R> supplier)` & `Executor#offer(R item)`
+  > This simply returns the result of the supplier or it returns `item` which is passed into the next tasknode.
+- `Executor#peek(Consumer<T> consumer)`
+  > This peeks at the current value from the previous VALUETASK and consumes it, returning the current value back, which just means it executes the operation and     returns the object passed into the operation, so it preserves the returned value perfectly.
+- `Executor#filter(Predicate<T> predicate, R def)` & `Executor#filter(Predicate<T> predicate, Supplier<R> def)`
+  > If the condition, `predicate`, is true; replaces it with the result of `def` or, with `def`.
+- `Executor#empty(Consumer<T> consumer)`
+  > Empties the result from the previous `VALUETASK` consuming it, and returning null.
+- `Executor#empty(Runnable runnable)`
+  > Empties the result from the previos `VALUETASK` and executing the `runnable`, returning null.
+- `Executor#empty()`
+  > Short form way to write,
+  > ```java
+  > void main() {
+  >   Executor<Void> executor =
+  >     new Executor(5)
+  >       .map(item -> null)
+  > }
+  > ```
+- `Executor#execute(Runnable runnable)`
+  > Executes the given runnable, returns the previous `VALUETASK`'s result.
+- `Executor#throwIf(Predicate<T> predicate, RuntimeException exception)`
+  > Throws an exception if the `predicate` is true, the predicate accepts the result from the previous `VALUETASK`
+- `Executor#cancelIf(Predicate<T> predicate)`
+  > Cancels the executor if the given `predicate` is true. The predicate reads from the result of the previous `VALUETASK`
+- `Executor#mapIf(Predicate<T> predicate,Function<T,R> function)`
+  > Executes the mapping operation if the given `predicate` is true, it takes in the result of the previous `VALUETASK`
+- `Executor#peekIf(Predicate<T> predicate,Consumer<T> consumer)`
+  > Executes the given `consumer` if the given `predicate` returns true, it takes the result from the previous `VALUETASK`
+- `Executor#executeIf(Predicate<T> predicate,Runnable runnable)`
+  > Executes the given `runnable` if the given `predicate` returns true, it takes the reuslt from the previous `VALUETASK`
+- `Executor#emptyIf(Preidcate<T> predicate,Consumer<T> consumer)`
+  > Executes the given `consumer` which consumes the result of the previous `VALUETASK` the `predicate` takes in the result of the previous `VALUETASK` it also        empties the result, returning null.
+- `Executor#emptyIf(Predicate<T> predicate, Runnable runnable)`
+  > Executes the given `runnable` if the `predicate` is true, if the predicate happens to be true it will also empty the result.
+- `Executor#emptyIf(Predicate<T> predicate)`
+  > if the given `predicate` is true, it empties, returning null.
+- `Executor#delay(long ms)`
+  > Delays the given executor for `ms` milliseconds
+- `Executor#delayIf(Predicate<T> predicate, long ms)`
+  > Delays the given executor for `ms` milliseconds if the `predicate` returns true, it takes in the result of the previous `VALUETASK`
+- `Executor#skipIf(Predicate<T> predicate, int skipCount)`
+  > Skips `skipCount` tasks, if the given `predicate` is true, it takes in the result of the previous `VALUETASK`
