@@ -121,6 +121,16 @@ These are the things that directly morph results and act as debugging or general
   > Delays the given executor for `ms` milliseconds if the `predicate` returns true, it takes in the result of the previous `VALUETASK`
 - `Executor#skipIf(Predicate<T> predicate, int skipCount)`
   > Skips `skipCount` tasks, if the given `predicate` is true, it takes in the result of the previous `VALUETASK`
+- `Executor#fork(Executor<R> executor)`
+  > This starts the supplied `executor` whenever it reaches the tasknode for it, you can optionally `gather` non-independent forked tasks using                        `Executor#gather()` or its sister method.
+- `Executor#fork(Function<T,Executor<R>> function)`
+  > This runs the function whenever the given node is executed. The value from the previous `VALUETASK` is passed in, it returns an Executor from there, which is    then started whenever the function finishes execution.
+- `Executor#gather()`
+  > Gathers are sidetasks and waits for all of them to complete. Returns the result of the previous `VALUETASK`
+- `Executor#gather(Consumer<Object[]> consumer)`
+  > Gathers all sidetasks & their results into an Object[] array, which is passed into the consumer and is consumed. It returns the result of the previous `VALUETASK`
+- `Executor#gather(Function<Object[],R> function)`
+  > Takes in the result of all joined sidetasks, passing them into the function and returning a value from that function.
 # TaskNodeAPI
 > The TaskNodeAPI is entirely arround using the TaskQueue and Executor respectively to create your own methods that can be used with the ExecutorAPI, while it       isn't very flexible, you're confined to a specific method to add both task forks (explained later) and core-tasks.
 
